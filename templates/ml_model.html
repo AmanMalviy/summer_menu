@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>California Housing Price Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        form {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #3e8e41;
+        }
+
+        #result {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>California Housing Price Prediction</h1>
+    <form>
+        <label for="median_income">Median Income (in tens of thousands):</label>
+        <input type="number" id="median_income" name="median_income" step="0.01"><br><br>
+        <label for="avg_rooms">Average Number of Rooms per Household:</label>
+        <input type="number" id="avg_rooms" name="avg_rooms" step="0.01"><br><br>
+        <input type="submit" value="Predict">
+    </form>
+    <div id="result"></div>
+
+    <script>
+        const form = document.querySelector('form');
+        const resultDiv = document.querySelector('#result');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const medianIncome = document.querySelector('#median_income').value;
+            const avgRooms = document.querySelector('#avg_rooms').value;
+
+            const data = { medianIncome, avgRooms };
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            resultDiv.innerText = `The predicted median house value is $${result.prediction.toFixed(2)}k`;
+        });
+    </script>
+</body>
+</html>

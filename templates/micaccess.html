@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech to Text</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        #output {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+            width: 100%;
+            height: 100px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Speech to Text</h1>
+    <button id="start-btn">Start Listening</button>
+    <div id="output" contenteditable="true"></div>
+
+    <script>
+        // Check for browser support
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US'; // Set the language
+
+            // Handle the result of speech recognition
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('output').innerText += transcript + " ";
+            };
+
+            recognition.onstart = function() {
+                console.log('Voice recognition started. Try speaking into the microphone.');
+            };
+
+            recognition.onspeechend = function() {
+                recognition.stop();
+                console.log('Voice recognition stopped.');
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Error occurred in recognition:', event.error);
+            };
+
+            // Start listening when the button is clicked
+            document.getElementById('start-btn').addEventListener('click', function() {
+                recognition.start();
+            });
+        } else {
+            alert('Sorry, your browser does not support speech recognition.');
+        }
+    </script>
+</body>
+</html>

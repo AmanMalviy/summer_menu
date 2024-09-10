@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="flex flex-col min-h-screen p-4 bg-gray-800">
+    <div class="hero">
+        <nav>
+            <img src="/static/image folder/menu.jpeg" alt="">
+            <ul>
+                <li><a href="{{url_for('index')}}">HOME</a></li>
+                <li><a href="{{url_for('about')}}" class="active">ABOUT</a></li>
+                
+            </ul>  
+        </nav> 
+
+        <div id="about" class="container mt-10">
+            <h1 class="text-4xl font-bold mb-4">About Me</h1>
+            <p class="text-lg">
+                Hello! I'm Aman Malviya, currently in my third year of pursuing a BTech at United University, with a focus on computer science. My love and passion for computer science have deepened my interest in Machine Learning, where I have learned to face challenges and grow as a learner and coder.
+                <br><br>
+                I am inspired by rapidly growing technology, which motivates me to continue learning and exploring new advancements in the field.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

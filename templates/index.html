@@ -1,0 +1,33 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Base</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="hero">
+        <nav>
+            <img src="/static/images/menu.jpeg" alt="">
+            <ul>
+                <li><a href="#">HOME</a></li>
+                <li><a href="{{url_for('about')}}">ABOUT</a></li>
+                
+            </ul>  
+        </nav> 
+        <div class="data">
+            <h1>I'm Aman <span>Malviya</span></h1>
+            <p>Welcome to my Portfolio<br>Here is a detail regarding my PROJECTS:</p>
+            <a href="{{url_for('projects')}}">VIEW PROJECT</a> 
+              
+        </div>
+        <div class="images">
+            
+            <img src="/static/images/myimage.jpg" class="image">
+        </div>
+    </div>  
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Filter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group input[type="file"] {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .form-group select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .response {
+            margin-top: 20px;
+        }
+        .response img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Apply Filters to Image</h1>
+        <div class="form-group">
+            <label for="file">Upload Image:</label>
+            <input type="file" id="file" accept="image/*">
+        </div>
+        <div class="form-group">
+            <label for="filter">Choose Filter:</label>
+            <select id="filter">
+                <option value="sunglasses">Sunglasses</option>
+                <option value="stars">Stars</option>
+            </select>
+        </div>
+        <button class="btn" onclick="applyFilter()">Apply Filter</button>
+        <div class="response" id="response"></div>
+    </div>
+
+    <script>
+        function applyFilter() {
+            const fileInput = document.getElementById('file');
+            const filterType = document.getElementById('filter').value;
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please upload an image file.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('filter', filterType);
+
+            fetch('/apply_special_filter', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const resultHTML = `
+                        <h2>Filtered Image</h2>
+                        <img src="${data.filtered_image}" alt="Filtered Image">
+                    `;
+                    document.getElementById('response').innerHTML = resultHTML;
+                } else {
+                    document.getElementById('response').innerText = 'Error: ' + data.message;
+                }
+            })
+            .catch(error => {
+                document.getElementById('response').innerText = 'An error occurred: ' + error.message;
+            });
+        }
+    </script>
+</body>
+</html>

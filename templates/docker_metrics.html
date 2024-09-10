@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Metrics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 50%;
+            margin: auto;
+        }
+        
+        canvas {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Docker Metrics Dashboard</h1>
+        <canvas id="memoryChart"></canvas>
+        <canvas id="storageChart"></canvas>
+        <div id="status"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        async function fetchDockerMetrics() {
+            const response = await fetch('/docker-metrics');
+            const data = await response.json();
+            return data;
+        }
+
+        async function updateMetrics() {
+            const metrics = await fetchDockerMetrics();
+
+            // Update memory usage chart
+            memoryChart.data.datasets[0].data.push(metrics.memory_used);
+            memoryChart.update();
+
+            // Update storage chart
+            storageChart.data.datasets[0].data.push(metrics.storage);
+            storageChart.update();
+
+            // Update status
+            document.getElementById('status').innerText = `Status: ${metrics.status}`;
+        }
+
+        const memoryChart = new Chart(document.getElementById('memoryChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Memory Used (MB)',
+                    data: [],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: true,
+                }]
+            },
+            options: {
+                scales: {
+                    x: { title: { display: true, text: 'Time' }},
+                    y: { title: { display: true, text: 'Memory Used (MB)' }},
+                }
+            }
+        });
+
+        const storageChart = new Chart(document.getElementById('storageChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Storage Used (GB)',
+                    data: [],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                    fill: true,
+                }]
+            },
+            options: {
+                scales: {
+                    x: { title: { display: true, text: 'Time' }},
+                    y: { title: { display: true, text: 'Storage Used (GB)' }},
+                }
+            }
+        });
+
+        // Fetch and update metrics every 5 seconds
+        setInterval(() => {
+            updateMetrics();
+            const now = new Date().toLocaleTimeString();
+            memoryChart.data.labels.push(now);
+            storageChart.data.labels.push(now);
+        }, 5000);
+    </script>
+</body>
+</html>

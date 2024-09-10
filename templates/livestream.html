@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Stream</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Live Stream</h1>
+    <video id="video" width="640" height="480"></video>
+    <button id="start-button">Start Stream</button>
+    <button id="stop-button">Stop Stream</button>
+    <div id="labels"></div>
+
+    <script>const video = document.getElementById('video');
+        const startButton = document.getElementById('start-button');
+        const stopButton = document.getElementById('stop-button');
+        const labelsDiv = document.getElementById('labels');
+        
+        let stream;
+        let peerConnection;
+        let dataChannel;
+        
+        startButton.addEventListener('click', async () => {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                video.srcObject = stream;
+                video.play();
+        
+                peerConnection = new RTCPeerConnection();
+                peerConnection.addStream(stream);
+        
+                dataChannel = peerConnection.createDataChannel('liveStream');
+                dataChannel.onmessage = event => {
+                    console.log(`Received message from backend: ${event.data}`);
+                    labelsDiv.innerText = `Detected labels: ${event.data.labels.join(', ')}`;
+                };
+        
+                // Send the live stream to the backend
+                dataChannel.send(stream);
+            } catch (error) {
+                console.error('Error accessing camera and microphone:', error);
+            }
+        });
+        
+        stopButton.addEventListener('click', () => {
+            stream.getTracks().forEach(track => track.stop());
+            peerConnection.close();
+            dataChannel.close();
+        });</script>
+</body>
+</html>

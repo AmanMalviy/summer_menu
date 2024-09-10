@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker</title>
+</head>
+<body>
+    <h2>Docker</h2>
+    <form action="/pull" method="POST">
+        <input type="text" id='docker' name="docker" placeholder="Enter your Image:version">
+        <input type="submit" value="Pull">
+    </form>
+    <button onclick="get_images()">See Images</button>
+    <script>
+        function get_images() {
+            fetch('/images', {
+                method: 'POST',
+            })
+            .then(response => response.text())
+            .then(data => alert(data))
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
+

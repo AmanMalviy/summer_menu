@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Base</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .head {
+            font-family: 'Cambria', Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        .btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+            color: whitesmoke;
+            padding: 12px 24px;
+            border: 2px solid #34D399; /* Green border */
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 225px;
+            width: 200px;
+            text-align: center;
+        }
+        .btn img {
+            width: 100%; /* Adjust to fit the button's width */
+            height: 150px; /* Set a fixed height for the image */
+            margin-bottom: 10px;
+            object-fit: cover; /* Ensure the image covers the allocated space */
+            border-radius: 5px 5px 0 0; /* Round the top corners of the image */
+        }
+        /* Specific adjustments for the Docker image */
+        .btn img.docker {
+            object-fit: contain; /* Ensure the entire Docker logo is visible */
+        }
+        .btn:hover {
+            background-color: #34D399; /* Green background on hover */
+            color: #1F2937; /* Dark text on hover */
+            transform: translateY(-3px); /* Slight lift on hover */
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 buttons per row */
+            gap: 20px; /* Space between buttons */
+            max-width: 1000px; /* Maximum width for the grid container */
+            margin: 0 auto; /* Center the grid container */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-gray-900 via-gray-700 to-gray-600 text-white flex flex-col items-center justify-center min-h-screen p-4">
+    <div class="text-center mb-12">
+        <h1 class="head text-4xl font-bold mb-4">Hello World, I'm Aman Malviya</h1>
+        <h2 class="head text-2xl font-semibold underline">Welcome to Menu Base</h2>
+    </div>
+    <form action="/handle_action" method="POST" class="w-full grid-container">
+        <button type="submit" name="action" value="email" class="btn">
+            <img src="/static/images/email.png" alt="Email">
+            Email
+        </button>
+        <button type="submit" name="action" value="call" class="btn">
+            <img src="/static/images/call.jpeg" alt="Call">
+            Call
+        </button>
+        <button type="submit" name="action" value="sms" class="btn">
+            <img src="/static/images/sms.jpeg" alt="SMS">
+            SMS
+        </button>
+        <button type="submit" name="action" value="wth" class="btn">
+            <img src="/static/images/whatsapp.jpeg" alt="WhatsApp">
+            WhatsApp Msg
+        </button>
+        <button type="submit" name="action" value="geocord" class="btn">
+            <img src="/static/images/geo.jpg" alt="Geo Coordinates">
+            Geo Coordinates
+        </button>
+        <button type="submit" name="action" value="tta" class="btn">
+            <img src="/static/images/text-audio.png" alt="Text to Audio">
+            Text to Audio
+        </button>
+        <button type="submit" name="action" value="data" class="btn">
+            <img src="/static/images/dataprocessing.jpeg" alt="Data Processing">
+            Data Process
+        </button>
+        <button type="submit" name="action" value="random_image" class="btn">
+            <img src="/static/images/random.png" alt="Random Image">
+            Random Image
+        </button>
+        <button type="submit" name="action" value="image_filter" class="btn">
+            <img src="/static/images/image filter.jpeg" alt="Image Filter">
+            Image Filter
+        </button>
+        <button type="submit" name="action" value="live" class="btn">
+            <img src="/static/images/live.jpeg" alt="Live Stream">
+            Live Stream
+        </button>
+        <button type="submit" name="action" value="clickpic" class="btn">
+            <img src="/static/images/clickpic.jpeg" alt="Click Picture">
+            Click Picture
+        </button>
+        <button type="submit" name="action" value="special_filters" class="btn">
+            <img src="/static/images/filter.jpeg" alt="Special Filters">
+            Special Filters
+        </button>
+        <button type="submit" name="action" value="ml_model" class="btn">
+            <img src="/static/images/ml.jpeg" alt="ML Model">
+            ML Model
+        </button>
+        <button type="submit" name="action" value="docker_metrics" class="btn">
+            <img src="/static/images/docker.png" alt="Docker Metrics" class="docker">
+            Docker Metrics
+        </button>
+        <button type="submit" name="action" value="micaccess" class="btn">
+            <img src="/static/images/mic.png" alt="Mic Access">
+            Mic Access
+        </button>
+    </form>
+</body>
+</html>

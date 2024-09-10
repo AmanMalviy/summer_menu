@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Geo Coordinates</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .geo-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        .geo-form h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .geo-form input, .geo-form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .geo-form button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .geo-form button:hover {
+            background-color: #0056b3;
+        }
+        .geo-results {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="geo-form">
+    <h2>Get Coordinates</h2>
+    <form id="geoForm">
+        <input type="text" id="address" name="address" placeholder="Enter location or address" required>
+        <button type="submit">Find</button>
+    </form>
+    <div class="geo-results" id="results"></div>
+</div>
+
+<script>
+    document.getElementById('geoForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form from refreshing the page
+
+        const formData = new FormData(this);
+        const data = new URLSearchParams(formData);
+
+        fetch('/get_geo_coordinates', {
+            method: 'POST',
+            body: data,
+        })
+        .then(response => response.json())
+        .then(data => {
+            const resultsDiv = document.getElementById('results');
+            if (data.error) {
+                resultsDiv.innerHTML = 'Error: ' + data.error;
+            } else {
+                resultsDiv.innerHTML = `
+                    <p><strong>Address:</strong> ${data.address}</p>
+                    <p><strong>Latitude:</strong> ${data.latitude}</p>
+                    <p><strong>Longitude:</strong> ${data.longitude}</p>
+                `;
+            }
+        })
+        .catch(error => {
+            document.getElementById('results').textContent = 'Error: ' + error;
+        });
+    });
+</script>
+
+</body>
+</html>

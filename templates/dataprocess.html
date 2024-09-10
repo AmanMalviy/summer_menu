@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Processing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .response {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Data Process</h1>
+        <div class="form-group">
+            <label for="file">Upload Your CSV File:</label>
+            <input type="file" id="file" accept=".csv">
+        </div>
+        <button class="btn" onclick="processData()">Process Your Data</button>
+        <div class="response" id="response"></div>
+    </div>
+
+    <script>
+        function processData() {
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please upload a CSV file.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/process_data', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    let summary = '<h2>Data Summary</h2>';
+                    summary += '<h3>Mean:</h3><pre>' + JSON.stringify(data.summary.mean, null, 2) + '</pre>';
+                    summary += '<h3>Median:</h3><pre>' + JSON.stringify(data.summary.median, null, 2) + '</pre>';
+                    summary += '<h3>Standard Deviation:</h3><pre>' + JSON.stringify(data.summary.std_dev, null, 2) + '</pre>';
+                    document.getElementById('response').innerHTML = summary;
+                } else {
+                    document.getElementById('response').innerText = 'Error: ' + data.message;
+                }
+            })
+            .catch(error => {
+                document.getElementById('response').innerText = 'An error occurred: ' + error.message;
+            });
+        }
+    </script>
+</body>
+</html>

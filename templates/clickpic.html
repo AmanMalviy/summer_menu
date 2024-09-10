@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture Photo</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 32px;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        #video {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #capture-btn {
+            background: #ff512f;
+            background: linear-gradient(to right, #ff512f, #dd2476);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        #capture-btn:hover {
+            background: linear-gradient(to right, #dd2476, #ff512f);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        #captured-image {
+            margin-top: 30px;
+            max-width: 450px;
+            width: 100%;
+            display: none;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Capture Your Photo</h1>
+    <video id="video" autoplay></video>
+    <button id="capture-btn">Capture Photo</button>
+    <p id="status"></p>
+    <img id="captured-image" alt="Captured Photo">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const video = document.getElementById('video');
+            const canvas = document.createElement('canvas');
+            const captureBtn = document.getElementById('capture-btn');
+            const status = document.getElementById('status');
+            const capturedImage = document.getElementById('captured-image');
+
+            // Access the camera
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                })
+                .catch(err => {
+                    console.error('Error accessing the camera: ', err);
+                    status.textContent = 'Error accessing the camera';
+                });
+
+            // Capture the photo when the button is clicked
+            captureBtn.addEventListener('click', () => {
+                status.textContent = 'Capturing...';
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const context = canvas.getContext('2d');
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Convert the canvas to a data URL and send it to the backend
+                const dataUrl = canvas.toDataURL('image/png');
+
+                fetch('/capture', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image: dataUrl })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        status.textContent = 'Error: ' + data.error;
+                    } else {
+                        status.textContent = 'Photo captured and saved successfully!';
+                        capturedImage.src = data.file_path;
+                        capturedImage.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    status.textContent = 'An error occurred: ' + error.message;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
